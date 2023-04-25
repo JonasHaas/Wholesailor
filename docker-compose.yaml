@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:  
+  app-node:
+    build: ./backend
+    container_name: app
+    command: /bin/sh -c "sleep 5 && python test_connection.py"
+    ports:
+      - "5000:5000"
+    networks:
+      - woocommerce-example-shop_default
+networks:
+  woocommerce-example-shop_default:
+    external: true
