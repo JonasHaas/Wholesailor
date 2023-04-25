@@ -1,0 +1,27 @@
+version: '3.8'
+services:
+  dynamodb-local:
+    command: "-jar DynamoDBLocal.jar -sharedDb -dbPath ./data"
+    image: "amazon/dynamodb-local:latest"
+    container_name: dynamodb-local
+    ports:
+      - "8000:8000"
+    volumes:
+      - "./docker/dynamodb:/home/dynamodblocal/data"
+    working_dir: /home/dynamodblocal
+
+  app-node:
+    depends_on:
+      - dynamodb-local
+    build: ./backend
+    container_name: app-node
+    ports:
+      - "5000:5000"
+    environment:
+      AWS_ACCESS_KEY_ID: '${AWS_ACCESS_KEY_ID}'
+      AWS_SECRET_ACCESS_KEY: '${AWS_SECRET_ACCESS_KEY}'
+    networks:
+      - woocommerce-example-shop_default
+networks:
+  woocommerce-example-shop_default:
+    external: true
