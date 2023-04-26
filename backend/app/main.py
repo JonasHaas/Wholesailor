@@ -1,10 +1,7 @@
-from flask import jsonify
+from flask import Flask, jsonify
 from app import app
 from woocommerce import API
 import os
-from dotenv import load_dotenv
-
-load_dotenv()
 
 WC_API_URL = os.getenv('WC_API_URL')
 WC_CONSUMER_KEY = os.getenv('WC_CONSUMER_KEY')
@@ -19,12 +16,29 @@ wcapi = API(
 )
 
 def fetch_products():
-    response = wcapi.get("products")
-    if response.status_code == 200:
-        return response.json()
-    else:
-        return []
+    try:
+        products = []
+        page = 1
 
+        while True:
+            response = wcapi.get("products", params={"per_page": 100, "page": page}).json()
+
+            if not response:
+                break
+
+            products.extend(response)
+            page += 1
+        
+        # Filter the products to only include the ID and name
+        filtered_products = [{"id": product["id"], "name": product["name"]} for product in products]
+
+        return filtered_products
+    except Exception as e:
+        error = {"error": str(e)}
+        return jsonify(error)
+
+
+# this is just a test endpoint
 @app.route('/products', methods=['GET'])
 def get_products():
     products = fetch_products()
