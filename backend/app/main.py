@@ -28,7 +28,8 @@ def fetch_products():
 @app.route('/products', methods=['GET'])
 def get_products():
     products = fetch_products()
-    return jsonify(products)
+    product_count = len(products)
+    return jsonify({"count": product_count, "products": products})
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
