@@ -21,9 +21,14 @@ services:
     environment:
       AWS_ACCESS_KEY_ID: '${AWS_ACCESS_KEY_ID}'
       AWS_SECRET_ACCESS_KEY: '${AWS_SECRET_ACCESS_KEY}'
-    networks:
-      - woocommerce-example-shop_default
+      DYNAMODB_TABLE_NAME: 'products'
+      DYNAMODB_ENDPOINT_URL: 'http://dynamodb-local:8000'
+      DYNAMODB_REGION: 'us-west-2' # or any other region you prefer
+    volumes:
+    - ./backend:/app
+    # networks:
+    #   - woocommerce-example-shop_default
 
-networks:
-  woocommerce-example-shop_default:
-    external: true
+# networks:
+#   woocommerce-example-shop_default:
+#     external: true
