@@ -14,7 +14,7 @@ services:
   backend:
     depends_on:
       - dynamodb-local
-    build: ./backend
+    build: ./app/backend
     container_name: backend
     ports:
       - "5000:5000"
@@ -25,10 +25,4 @@ services:
       DYNAMODB_ENDPOINT_URL: 'http://dynamodb-local:8000'
       DYNAMODB_REGION: 'us-west-2' # or any other region you prefer
     volumes:
-    - ./backend:/app
-    # networks:
-    #   - woocommerce-example-shop_default
-
-# networks:
-#   woocommerce-example-shop_default:
-#     external: true
+      - ./app/backend:/app
