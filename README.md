@@ -1,2 +1,2 @@
 # wholesailor
-![](docs/cloud-arcitecture-diagram.png)
+![](docs/cloud-architecture-diagram.png)
