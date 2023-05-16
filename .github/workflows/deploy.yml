@@ -22,4 +22,4 @@ jobs:
     
             - name: Sync files to S3
               run: |
-                aws s3 sync ./app/frontend/ s3://your_bucket_name/
+                aws s3 sync ./app/frontend/ s3://wholesailor-frontend-bucket/
