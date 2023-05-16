@@ -6,7 +6,7 @@ terraform {
     }
   }
   backend "s3" {
-    bucket = "wholesailor-state-bucket"
+    bucket = "wholesailor-tfstate-bucket"
     key    = "main.tfstate"
     region = "eu-central-1"
   }
