@@ -1,4 +1,5 @@
 .env
 .terraform*
 .vscode
+.tfplan
 docker/dynamodb/*.db
