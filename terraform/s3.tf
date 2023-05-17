@@ -5,20 +5,43 @@ resource "aws_s3_bucket" "frontend_bucket" {
   tags          = var.common_tags
 }
 
-resource "aws_s3_bucket_policy" "read_access" {
+resource "aws_s3_bucket_public_access_block" "public_access" {
   bucket = aws_s3_bucket.frontend_bucket.id
-  policy = data.aws_iam_policy_document.read_access.json
+
+  block_public_acls       = false
+  block_public_policy     = false
+  ignore_public_acls      = false
+  restrict_public_buckets = false
 }
 
-data "aws_iam_policy_document" "read_access" {
-  statement {
-    principals {
-      type        = "AWS"
-      identifiers = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"]
+resource "aws_s3_bucket_website_configuration" "website" {
+  bucket = aws_s3_bucket.frontend_bucket.id
 
+  index_document {
+    suffix = "index.html"
+  }
+
+  error_document {
+    key = "error.html"
+  }
+}
+
+data "aws_iam_policy_document" "public_read" {
+  statement {
+    sid    = "PublicReadGetObject"
+    effect = "Allow"
+
+    principals {
+      type        = "*"
+      identifiers = ["*"]
     }
+
     actions   = ["s3:GetObject"]
     resources = ["${aws_s3_bucket.frontend_bucket.arn}/*"]
-    effect    = "Allow"
   }
+}
+
+resource "aws_s3_bucket_policy" "public_read" {
+  bucket = aws_s3_bucket.frontend_bucket.id
+  policy = data.aws_iam_policy_document.public_read.json
 }
