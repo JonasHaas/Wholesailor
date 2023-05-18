@@ -4,6 +4,8 @@
 .tfplan
 docker/dynamodb/*.db
 
+# dev
 /appold/
 response.json
+response2.json
 *backup*

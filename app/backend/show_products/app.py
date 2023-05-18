@@ -1,6 +1,6 @@
 import boto3
 
-logging = False
+logging = True
 logs = []
 
 
@@ -27,4 +27,4 @@ def get_all_items_from_dynamodb():
 
 def handler(event, context):
     items = get_all_items_from_dynamodb()
-    return {"statusCode": 200, "body": f"Hello from Lambda! {items}"}
+    return {"statusCode": 200, "body": logs}
