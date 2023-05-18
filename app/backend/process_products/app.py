@@ -34,8 +34,6 @@ def fetch_products(limit=4, items_per_page=4, starting_from_page=1):
         version="wc/v3",
     )
 
-    console.log("test")
-
     try:
         products = []
         fetched_count = 0
@@ -72,4 +70,5 @@ def fetch_products(limit=4, items_per_page=4, starting_from_page=1):
 
 
 def handler(event, context):
+    logging.info("test")
     return fetch_products()
