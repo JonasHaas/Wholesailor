@@ -75,16 +75,16 @@ resource "aws_lambda_function" "process_products" {
   tags = var.common_tags
 }
 
-# resource "aws_lambda_function" "get_products" {
-#   function_name = "get-products"
+resource "aws_lambda_function" "get_products" {
+  function_name = "get-products"
 
-#   role      = aws_iam_role.iam_for_lambda.arn
-#   image_uri = "${aws_ecr_repository.ecr_repository2.repository_url}:latest"
+  role      = aws_iam_role.iam_for_lambda.arn
+  image_uri = "${aws_ecr_repository.ecr_repository2.repository_url}:latest"
 
-#   package_type = "Image"
-#   timeout      = 60
+  package_type = "Image"
+  timeout      = 60
 
-#   depends_on = [aws_ecr_repository.ecr_repository2]
+  depends_on = [aws_ecr_repository.ecr_repository2]
 
-#   tags = var.common_tags
-# }
+  tags = var.common_tags
+}
