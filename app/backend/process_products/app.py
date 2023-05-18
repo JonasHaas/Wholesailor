@@ -2,7 +2,7 @@ import boto3
 import html
 from woocommerce import API
 
-logging = False
+logging = True
 logs = []
 
 
@@ -90,9 +90,11 @@ def sync_products_to_dynamodb(products=None):
     try:
         dynamodb = boto3.resource("dynamodb", region_name="eu-central-1")
         table = dynamodb.Table("products")
-        logs.append("Successfully connected to DynamoDB")
+        if logging == True:
+            logs.append("Successfully connected to DynamoDB")
     except Exception as e:
-        logs.append(f"Error connecting to DynamoDB: {str(e)}")
+        if logging == True:
+            logs.append(f"Error connecting to DynamoDB: {str(e)}")
 
     if products is None:
         products = process_products(fetch_products())
@@ -114,4 +116,4 @@ def handler(event, context):
     products = fetch_products()
     processed_products = process_products(products)
     sync_products_to_dynamodb(processed_products)
-    return {"statusCode": 200, "body": logs}
+    return {"statusCode": 200, "body": processed_products}
