@@ -1,0 +1,2 @@
+boto3==1.26.119
+woocommerce==3.0.0
