@@ -33,7 +33,8 @@ data "aws_iam_policy_document" "dynamodb_policy" {
       "dynamodb:PutItem",
       "dynamodb:GetItem",
       "dynamodb:UpdateItem",
-      "dynamodb:DeleteItem"
+      "dynamodb:DeleteItem",
+      "dynamodb:Scan",
     ]
 
     resources = [
