@@ -6,3 +6,4 @@ docker/dynamodb/*.db
 
 /appold/
 response.json
+*backup*
