@@ -1,21 +1,13 @@
-# Use an official Python runtime as a parent image
-FROM python:3.11-slim
+FROM public.ecr.aws/lambda/python:3.8
 
-# Set the working directory to /app
-WORKDIR /app
+# Install the function's dependencies using file requirements.txt
+# from your project folder.
 
-# Copy the current directory contents into the container at /app
-COPY ../. /app
+COPY requirements.txt  .
+RUN  pip3 install -r requirements.txt --target "${LAMBDA_TASK_ROOT}"
 
-# Install any needed packages specified in requirements.txt
-RUN pip install --trusted-host pypi.python.org -r requirements.txt
+# Copy function code
+COPY app.py ${LAMBDA_TASK_ROOT}
 
-# Make port 5000 available to the world outside this container
-EXPOSE 5000
-
-# Define environment variable
-ENV FLASK_APP=src
-
-# Run app.py when the container launches
-# CMD ["flask", "run", "--host=0.0.0.0", "--port=5000"]
-CMD ["hupper", "-m", "flask", "run", "--host=0.0.0.0", "--port=5000"]
+# Set the CMD to your handler (could also be done as a parameter override outside of the Dockerfile)
+CMD [ "app.handler" ] 

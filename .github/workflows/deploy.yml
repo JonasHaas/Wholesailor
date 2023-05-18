@@ -33,7 +33,7 @@ jobs:
               id: build-image
               uses: docker/build-push-action@v2
               with:
-                context: ./test/
+                context: ./app/backend/
                 push: true
                 tags: ${{ steps.login-ecr.outputs.registry }}/wholesailor-ecr:latest
             
