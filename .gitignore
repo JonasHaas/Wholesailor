@@ -3,4 +3,3 @@
 .vscode
 .tfplan
 docker/dynamodb/*.db
-/test/
