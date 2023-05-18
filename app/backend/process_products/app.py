@@ -1,18 +1,23 @@
 import boto3
 from woocommerce import API
 
-responses = []
+logging = False
+secretsmanager_responses = []
 
 
 def get_secret(secret_name):
     secretsmanager_client = boto3.client("secretsmanager")
     try:
         response = secretsmanager_client.get_secret_value(SecretId=secret_name)
-        responses.append(f"Successfully retrieved secret for {secret_name}")
-        # return response["SecretString"]
+        if logging == True:
+            secretsmanager_responses.append("Successfully retrieved secret")
+        return response["SecretString"]
     except Exception as e:
-        responses.append(f"Failed to retrieve secret {secret_name}: {str(e)}")
-        # return None
+        if logging == True:
+            secretsmanager_responses.append(
+                f"Failed to retrieve secret {secret_name}: {str(e)}"
+            )
+        return None
 
 
 def fetch_products(limit=4, items_per_page=4, starting_from_page=1):
@@ -62,5 +67,5 @@ def fetch_products(limit=4, items_per_page=4, starting_from_page=1):
 
 
 def handler(event, context):
-    WC_API_URL = get_secret("WC_API_URL")
-    return {"statusCode": 200, "body": responses}
+    products = fetch_products()
+    return {"statusCode": 200, "body": products}
