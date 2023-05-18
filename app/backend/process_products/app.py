@@ -62,4 +62,5 @@ def fetch_products(limit=4, items_per_page=4, starting_from_page=1):
 
 
 def handler(event, context):
+    WC_API_URL = get_secret("WC_API_URL")
     return {"statusCode": 200, "body": responses}
