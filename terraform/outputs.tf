@@ -3,7 +3,11 @@ output "website_url" {
   value       = "https://${aws_s3_bucket.frontend_bucket.bucket}.s3.${data.aws_region.current.name}.amazonaws.com/index.html"
 }
 
-output "uri" {
+output "ecr_uri" {
   value       = aws_ecr_repository.ecr_repository.repository_url
   description = "The URI of the ECR repository."
+}
+
+output "ecr_repository_arn" {
+  value = aws_ecr_repository.ecr_repository.arn
 }
