@@ -11,9 +11,30 @@ data "aws_iam_policy_document" "assume_role" {
   }
 }
 
+data "aws_iam_policy_document" "secrets_policy" {
+  statement {
+    effect = "Allow"
+
+    actions = ["secretsmanager:GetSecretValue"]
+
+    resources = [
+      aws_secretsmanager_secret.WC_API_URL.arn,
+      aws_secretsmanager_secret.WC_CONSUMER_KEY.arn,
+      aws_secretsmanager_secret.WC_CONSUMER_SECRET.arn
+    ]
+  }
+}
+
 resource "aws_iam_role" "iam_for_lambda" {
   name               = "iam_for_lambda"
   assume_role_policy = data.aws_iam_policy_document.assume_role.json
+
+  inline_policy {
+    name   = "secrets_policy"
+    policy = data.aws_iam_policy_document.secrets_policy.json
+  }
+
+  managed_policy_arns = ["arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"]
 
   tags = var.common_tags
 }
