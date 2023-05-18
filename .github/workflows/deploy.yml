@@ -36,4 +36,6 @@ jobs:
                 context: ./app/backend/process_products/
                 push: true
                 tags: ${{ steps.login-ecr.outputs.registry }}/wholesailor-ecr:latest
-            
+            - name: Update Lambda function's image
+              run: |
+                aws lambda update-function-code --function-name process-products --image-uri ${{ steps.login-ecr.outputs.registry }}/wholesailor-ecr:latest --region eu-central-1
