@@ -1,4 +1,5 @@
 import boto3
+import html
 from woocommerce import API
 
 logging = False
@@ -66,6 +67,49 @@ def fetch_products(limit=4, items_per_page=4, starting_from_page=1):
         return error
 
 
+def process_products(products=None):
+    if products is None:
+        products = fetch_products()
+
+    # Filter the products to only include the ID and name purchasable and only if they are published
+    filtered_products = [
+        {
+            "id": product["id"],
+            "name": html.unescape(product["name"]),
+            "status": product["status"],
+            "sku": product["sku"],
+            "isDropship": False,
+            "wholesalerName": "",
+        }
+        for product in products
+        if product["status"] == "publish"
+    ]
+
+    return filtered_products
+
+
+def sync_products_to_dynamodb(products=None):
+    dynamodb = boto3.resource("dynamodb", region_name="eu-central-1")
+    table = dynamodb.Table("products")
+
+    if products is None:
+        products = process_products(fetch_products())
+
+    for product in products:
+        table.put_item(
+            Item={
+                "id": product["id"],
+                "name": product["name"],
+                "status": product["status"],
+                "sku": product["sku"],
+                "isDropship": product["isDropship"],
+                "wholesalerName": product["wholesalerName"],
+            }
+        )
+
+
 def handler(event, context):
     products = fetch_products()
+    processed_products = process_products(products)
+    sync_products_to_dynamodb(processed_products)
     return {"statusCode": 200, "body": products}
