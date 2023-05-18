@@ -1,6 +1,12 @@
 import boto3
 from woocommerce import API
 
+import logging
+import traceback
+
+logger = logging.getLogger()
+logger.setLevel(logging.ERROR)
+
 
 def get_secret(secret_name):
     secretsmanager_client = boto3.client("secretsmanager")
@@ -50,8 +56,10 @@ def fetch_products(limit=4, items_per_page=4, starting_from_page=1):
 
         return products
     except Exception as e:
-        error = {"error": str(e)}
-        return error
+        logger.error("Error occurred during fetching products", exc_info=True)
+        raise Exception(
+            "Error occurred during fetching products: {}".format(e)
+        ) from None
 
 
 def handler(event, context):
