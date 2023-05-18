@@ -4,18 +4,13 @@ on:
         - main
           
 jobs:
-    setup:
+    deploy_frontend:
         runs-on: ubuntu-latest
 
         steps:
         - name: Checkout repository
           uses: actions/checkout@v3
 
-    deploy_frontend:
-        needs: setup
-        runs-on: ubuntu-latest
-
-        steps:
         - name: Configure AWS credentials
           uses: aws-actions/configure-aws-credentials@v1
           with:
@@ -28,10 +23,12 @@ jobs:
             aws s3 sync ./app/frontend/ s3://wholesailor-frontend-bucket/ --region eu-central-1
 
     deploy_process_products:
-        needs: setup
         runs-on: ubuntu-latest
 
         steps:
+        - name: Checkout repository
+          uses: actions/checkout@v3
+            
         - name: Configure AWS credentials
           uses: aws-actions/configure-aws-credentials@v1
           with:
@@ -56,10 +53,12 @@ jobs:
             aws lambda update-function-code --function-name process-products --image-uri ${{ steps.build-image-process-products.outputs.digest }} --region eu-central-1
 
     deploy_show_products:
-        needs: setup
         runs-on: ubuntu-latest
 
         steps:
+        - name: Checkout repository
+          uses: actions/checkout@v3
+
         - name: Configure AWS credentials
           uses: aws-actions/configure-aws-credentials@v1
           with:
