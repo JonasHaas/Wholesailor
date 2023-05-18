@@ -2,7 +2,7 @@ import boto3
 import html
 from woocommerce import API
 
-logging = True
+logging = False
 logs = []
 
 

@@ -8,6 +8,17 @@ output "ecr_uri" {
   description = "The URI of the ECR repository."
 }
 
+output "ecr_uri2" {
+  value       = aws_ecr_repository.ecr_repository2.repository_url
+  description = "The URI of the ECR2 repository."
+}
+
 output "ecr_repository_arn" {
-  value = aws_ecr_repository.ecr_repository.arn
+  value       = aws_ecr_repository.ecr_repository.arn
+  description = "The arn of the ECR repository."
+}
+
+output "ecr_repository_arn2" {
+  value       = aws_ecr_repository.ecr_repository2.arn
+  description = "The arnURI of the ECR2 repository."
 }
