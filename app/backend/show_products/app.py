@@ -27,4 +27,4 @@ def get_all_items_from_dynamodb():
 
 def handler(event, context):
     items = get_all_items_from_dynamodb()
-    return {"statusCode": 200, "body": logs}
+    return {"statusCode": 200, "body": items}
