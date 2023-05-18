@@ -54,32 +54,37 @@ jobs:
             aws lambda update-function-code --function-name process-products --image-uri ${{ steps.login-ecr-process-products.outputs.registry }}/wholesailor-ecr@${{ steps.build-image-process-products.outputs.digest }} --region eu-central-1
 
 
-    # deploy_show_products:
-    #     runs-on: ubuntu-latest
+    deploy_show_products:
+        runs-on: ubuntu-latest
 
-    #     steps:
-    #     - name: Checkout repository
-    #       uses: actions/checkout@v3
+        steps:
+        - name: Checkout repository
+          uses: actions/checkout@v3
 
-    #     - name: Configure AWS credentials
-    #       uses: aws-actions/configure-aws-credentials@v1
-    #       with:
-    #         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-    #         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-    #         aws-region: eu-central-1
+        - name: Configure AWS credentials
+          uses: aws-actions/configure-aws-credentials@v1
+          with:
+            aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            aws-region: eu-central-1
 
-    #     - name: Login to Amazon ECR
-    #       id: login-ecr-show-products
-    #       uses: aws-actions/amazon-ecr-login@v1
+        - name: Login to Amazon ECR
+          id: login-ecr-show-products
+          uses: aws-actions/amazon-ecr-login@v1
 
-    #     - name: Build, tag, and push image to Amazon ECR
-    #       id: build-image-show-products
-    #       uses: docker/build-push-action@v2
-    #       with:
-    #         context: ./app/backend/show_products/
-    #         push: true
-    #         tags: ${{ steps.login-ecr-show-products.outputs.registry }}/wholesailor-ecr2:latest
+        - name: Build, tag, and push image to Amazon ECR
+          id: build-image-show-products
+          uses: docker/build-push-action@v2
+          with:
+            context: ./app/backend/show_products/
+            push: true
+            tags: ${{ steps.login-ecr-show-products.outputs.registry }}/wholesailor-ecr2:latest
 
-    #     - name: Update Lambda function's image
-    #       run: |
-    #         aws lambda update-function-code --function-name get-products --image-uri ${{ steps.build-image-show-products.outputs.digest }} --region eu-central-1
+        - name: Update Lambda function's image
+          run: |
+            aws lambda update-function-code --function-name get-products --image-uri ${{ steps.login-ecr-show-products.outputs.registry }}/wholesailor-ecr2@${{ steps.build-image-show-products.outputs.digest }} --region eu-central-1
+
+
+
+
+
