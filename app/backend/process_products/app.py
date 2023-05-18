@@ -3,7 +3,7 @@ import html
 from woocommerce import API
 
 logging = False
-secretsmanager_responses = []
+logs = []
 
 
 def get_secret(secret_name):
@@ -11,13 +11,11 @@ def get_secret(secret_name):
     try:
         response = secretsmanager_client.get_secret_value(SecretId=secret_name)
         if logging == True:
-            secretsmanager_responses.append("Successfully retrieved secret")
+            logs.append("Successfully retrieved secret")
         return response["SecretString"]
     except Exception as e:
         if logging == True:
-            secretsmanager_responses.append(
-                f"Failed to retrieve secret {secret_name}: {str(e)}"
-            )
+            logs.append(f"Failed to retrieve secret {secret_name}: {str(e)}")
         return None
 
 
@@ -89,8 +87,12 @@ def process_products(products=None):
 
 
 def sync_products_to_dynamodb(products=None):
-    dynamodb = boto3.resource("dynamodb", region_name="eu-central-1")
-    table = dynamodb.Table("products")
+    try:
+        dynamodb = boto3.resource("dynamodb", region_name="eu-central-1")
+        table = dynamodb.Table("products")
+        logs.append("Successfully connected to DynamoDB")
+    except Exception as e:
+        logs.append(f"Error connecting to DynamoDB: {str(e)}")
 
     if products is None:
         products = process_products(fetch_products())
@@ -112,4 +114,4 @@ def handler(event, context):
     products = fetch_products()
     processed_products = process_products(products)
     sync_products_to_dynamodb(processed_products)
-    return {"statusCode": 200, "body": products}
+    return {"statusCode": 200, "body": logs}
