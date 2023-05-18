@@ -8,8 +8,7 @@ variable "common_tags" {
   }
 }
 
-variable "bucket_name" {
-  type        = string
-  description = "The name of the S3 bucket."
-  default     = "wholesailor-frontend-bucket"
+variable "project_name" {
+  type    = string
+  default = "wholesailor"
 }
