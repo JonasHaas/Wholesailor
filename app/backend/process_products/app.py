@@ -9,9 +9,16 @@ logger.setLevel(logging.ERROR)
 
 
 def get_secret(secret_name):
+    logging.info(f"Fetching secret: {secret_name}")
     secretsmanager_client = boto3.client("secretsmanager")
-    response = secretsmanager_client.get_secret_value(SecretId=secret_name)
-    return response["SecretString"]
+    try:
+        response = secretsmanager_client.get_secret_value(SecretId=secret_name)
+        secret = response["SecretString"]
+        logging.info(f"Successfully fetched secret: {secret_name}")
+        return secret
+    except Exception as e:
+        logging.error(f"Error fetching secret: {secret_name}. Exception: {e}")
+        raise e
 
 
 def fetch_products(limit=4, items_per_page=4, starting_from_page=1):
