@@ -5,4 +5,6 @@ resource "aws_ecr_repository" "ecr_repository" {
   image_scanning_configuration {
     scan_on_push = true
   }
+
+  tags = var.common_tags
 }
