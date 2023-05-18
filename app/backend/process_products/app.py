@@ -100,20 +100,28 @@ def sync_products_to_dynamodb(products=None):
         products = process_products(fetch_products())
 
     for product in products:
-        table.put_item(
-            Item={
-                "id": product["id"],
-                "name": product["name"],
-                "status": product["status"],
-                "sku": product["sku"],
-                "isDropship": product["isDropship"],
-                "wholesalerName": product["wholesalerName"],
-            }
-        )
+        try:
+            table.put_item(
+                Item={
+                    "id": product["id"],
+                    "name": product["name"],
+                    "status": product["status"],
+                    "sku": product["sku"],
+                    "isDropship": product["isDropship"],
+                    "wholesalerName": product["wholesalerName"],
+                }
+            )
+            if logging == True:
+                logs.append(
+                    f"Successfully inserted item with ID {product['id']} into DynamoDB"
+                )
+        except Exception as e:
+            if logging == True:
+                logs.append(f"Error inserting item with ID {product['id']}: {str(e)}")
 
 
 def handler(event, context):
     products = fetch_products()
     processed_products = process_products(products)
     sync_products_to_dynamodb(processed_products)
-    return {"statusCode": 200, "body": processed_products}
+    return {"statusCode": 200, "body": logs}
