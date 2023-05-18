@@ -1,24 +1,11 @@
 import boto3
 from woocommerce import API
 
-import logging
-import traceback
-
-logger = logging.getLogger()
-logger.setLevel(logging.ERROR)
-
 
 def get_secret(secret_name):
-    logging.info(f"Fetching secret: {secret_name}")
     secretsmanager_client = boto3.client("secretsmanager")
-    try:
-        response = secretsmanager_client.get_secret_value(SecretId=secret_name)
-        secret = response["SecretString"]
-        logging.info(f"Successfully fetched secret: {secret_name}")
-        return secret
-    except Exception as e:
-        logging.error(f"Error fetching secret: {secret_name}. Exception: {e}")
-        raise e
+    response = secretsmanager_client.get_secret_value(SecretId=secret_name)
+    return response["SecretString"]
 
 
 def fetch_products(limit=4, items_per_page=4, starting_from_page=1):
@@ -63,12 +50,9 @@ def fetch_products(limit=4, items_per_page=4, starting_from_page=1):
 
         return products
     except Exception as e:
-        logger.error("Error occurred during fetching products", exc_info=True)
-        raise Exception(
-            "Error occurred during fetching products: {}".format(e)
-        ) from None
+        error = {"error": str(e)}
+        return error
 
 
 def handler(event, context):
-    logging.info("test")
-    return fetch_products()
+    return {"statusCode": 200, "body": "Hello from Lambda!"}
