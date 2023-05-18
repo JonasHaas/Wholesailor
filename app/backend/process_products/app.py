@@ -55,4 +55,4 @@ def fetch_products(limit=4, items_per_page=4, starting_from_page=1):
 
 
 def handler(event, context):
-    return {"statusCode": 200, "body": "Hello from Lambda!"}
+    return {"statusCode": 200, "body": "Hello from Jonas"}
