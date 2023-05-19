@@ -22,3 +22,8 @@ output "ecr_repository_arn2" {
   value       = aws_ecr_repository.ecr_repository2.arn
   description = "The arnURI of the ECR2 repository."
 }
+
+output "api_gateway_invoke_url" {
+  description = "The URL to invoke the API Gateway"
+  value       = aws_api_gateway_deployment.deployment.invoke_url
+}
