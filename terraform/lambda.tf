@@ -89,3 +89,4 @@ resource "aws_lambda_function" "get_products" {
 
   tags = var.common_tags
 }
+
