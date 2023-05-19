@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 async function fetchProducts() {
   try {
-      const response = await fetch("API_GATEWAY_URL/get-products");
+      const response = await fetch("ncjejybxi3.execute-api.eu-central-1.amazonaws.com/prod/get-products");
       const data = await response.json();
       if (data.items.length === 0) {
           await processProducts();
@@ -20,12 +20,12 @@ async function fetchProducts() {
 
 async function processProducts() {
   try {
-      const response = await fetch("API_GATEWAY_URL/process-products", { method: "POST" });
-      const data = await response.json();
-      console.log("Products processed:", data);
+    const response = await fetch("ncjejybxi3.execute-api.eu-central-1.amazonaws.com/prod/process-products", { method: "POST" });
+    const data = await response.json();
+    console.log("Products processed:", data);
   } catch (error) {
-      console.error("Error processing products:",
-    }
+    console.error("Error processing products:", error);
+  }
 }
 
 function displayProducts(products) {
