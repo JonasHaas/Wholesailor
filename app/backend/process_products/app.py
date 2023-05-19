@@ -1,4 +1,5 @@
 import boto3
+import json
 import html
 from woocommerce import API
 
@@ -121,7 +122,40 @@ def sync_products_to_dynamodb(products=None):
 
 
 def handler(event, context):
-    products = fetch_products()
-    processed_products = process_products(products)
-    sync_products_to_dynamodb(processed_products)
-    return {"statusCode": 200, "body": logs}
+    try:
+        products = fetch_products()
+        processed_products = process_products(products)
+        sync_products_to_dynamodb(processed_products)
+
+        # Create a message to send back
+        message = {
+            "message": "Successfully fetched and processed products",
+        }
+
+        return {
+            "statusCode": 200,
+            "body": json.dumps(message),  # Serialize the body as JSON
+            "headers": {
+                "Access-Control-Allow-Origin": "*",
+                "Content-Type": "application/json",
+            },
+        }
+
+    except Exception as e:
+        # You could add specific error handling here depending on the exception
+        print(f"Error: {str(e)}")
+
+        # Create an error message to send back
+        error_message = {
+            "message": "An error occurred while processing products",
+            "error": str(e),
+        }
+
+        return {
+            "statusCode": 500,
+            "body": json.dumps(error_message),  # Serialize the body as JSON
+            "headers": {
+                "Access-Control-Allow-Origin": "*",
+                "Content-Type": "application/json",
+            },
+        }
